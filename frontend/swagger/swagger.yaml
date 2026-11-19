@@ -1,0 +1,113 @@
+swagger: '2.0'
+info:
+  title: AI Photo Search
+  description: 'AI Photo Search application, built during the Cloud and Big Data course at Columbia University.'
+  version: 1.0.0
+schemes:
+  - https
+basePath: /v1
+produces:
+  - application/json
+x-amazon-apigateway-binary-media-types:
+  - image/jpeg
+  - image/png
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: x-api-key
+    in: header
+paths:
+  /search:
+    get:
+      summary: photo search method
+      description: |
+        This API takes in a search query as a query parameter and returns zero or more photos that match the search query.
+      operationId: searchPhotos
+      security:
+        - api_key: []
+      parameters:
+        - in: query
+          name: q
+          type: string
+          description: the string to be searched
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: search results
+          schema:
+            $ref: '#/definitions/SearchResponse'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /photos/{object}:
+    put:
+      summary: photo upload method
+      description: |
+        This API takes in the body sent to it (ex. a photo) and uploads it to an S3 bucket under the given object key.
+      operationId: uploadPhoto
+      security:
+        - api_key: []
+      consumes:
+        - image/png
+        - image/jpg
+        - image/jpeg
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: object
+          required: true
+          type: string
+          description: the S3 object key (file name) to store the photo under
+        - in: header
+          name: Content-Type
+          type: string
+          description: the image MIME type
+        - in: header
+          name: x-amz-meta-customLabels
+          type: string
+          description: comma-separated custom labels, e.g. "Sam, Sally"
+      responses:
+        '200':
+          description: S3 PUT operation response
+          schema:
+            type: object
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  SearchResponse:
+    type: object
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/Photo'
+  Photo:
+    type: object
+    properties:
+      url:
+        type: string
+      labels:
+        type: array
+        items:
+          type: string
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
