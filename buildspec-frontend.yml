@@ -7,9 +7,10 @@ env:
 phases:
   install:
     runtime-versions:
-      nodejs: 22
+      nodejs: 24
   build:
     commands:
+      - node --version && npm --version
       - test -n "$VITE_API_KEY" || { echo "VITE_API_KEY is not set on the CodeBuild project"; exit 1; }
       - (cd frontend && npm ci && npm run build)
       - aws s3 sync frontend/dist/ "s3://$FRONTEND_BUCKET" --delete
