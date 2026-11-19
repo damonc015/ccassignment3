@@ -85,8 +85,6 @@ def lambda_handler(event, context):
         text=query,
     )
     keywords = extract_keywords(lex_response)
-    print(json.dumps({"q": query, "keywords": keywords}))
-    if not keywords:
-        return response(200, {"results": []})
-
-    return response(200, {"results": search_photos(keywords)})
+    results = search_photos(keywords) if keywords else []
+    print(json.dumps({"q": query, "keywords": keywords, "count": len(results)}))
+    return response(200, {"results": results})
