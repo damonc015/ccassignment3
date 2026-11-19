@@ -1,0 +1,11 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - mkdir -p build/index-photos
+      - cp lambda-functions/index-photos.py build/index-photos/lambda_function.py
+      - (cd build/index-photos && zip -q ../index-photos.zip lambda_function.py)
+      - ./other-scripts/package-search-photos.sh
+      - aws lambda update-function-code --function-name index-photos --zip-file fileb://build/index-photos.zip --query LastUpdateStatus --output text
+      - aws lambda update-function-code --function-name search-photos --zip-file fileb://build/search-photos.zip --query LastUpdateStatus --output text
