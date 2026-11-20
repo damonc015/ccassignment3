@@ -1,7 +1,7 @@
 import { useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { SUPPORTED_TYPES, errorMessage, searchPhotos, uploadPhoto } from "@/lib/api"
@@ -36,7 +36,6 @@ function SearchCard() {
     <Card>
       <CardHeader>
         <CardTitle>Search</CardTitle>
-        <CardDescription>Try "show me dogs and cats" or a custom label like "Sam".</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <form onSubmit={onSubmit} className="flex gap-2">
@@ -46,7 +45,6 @@ function SearchCard() {
           <Input
             id="search-query"
             type="search"
-            placeholder="show me dogs and cats"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             required
@@ -117,7 +115,6 @@ function UploadCard() {
     <Card>
       <CardHeader>
         <CardTitle>Upload</CardTitle>
-        <CardDescription>Custom labels are added to the labels Rekognition detects.</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
@@ -141,7 +138,7 @@ function UploadCard() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="upload-labels">Custom labels (comma-separated, optional)</Label>
-            <Input id="upload-labels" placeholder="Sam, Sally" value={labels} onChange={(event) => setLabels(event.target.value)} />
+            <Input id="upload-labels" value={labels} onChange={(event) => setLabels(event.target.value)} />
           </div>
           <Button type="button" onClick={onUpload} disabled={busy || !file} className="justify-self-start">
             Upload
