@@ -13,7 +13,6 @@ function SearchCard() {
   const [busy, setBusy] = useState(false)
 
   async function onSubmit(event) {
-    
     event.preventDefault()
     const q = query.trim()
     if (!q) return
