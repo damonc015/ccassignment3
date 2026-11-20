@@ -11,7 +11,6 @@ ENDPOINT = os.environ["OPENSEARCH_ENDPOINT"].rstrip("/")
 REGION = os.environ["AWS_REGION"]
 INDEX = "photos"
 
-
 s3 = boto3.client("s3")
 rekognition = boto3.client("rekognition")
 session = boto3.Session()
